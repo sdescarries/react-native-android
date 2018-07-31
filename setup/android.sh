@@ -1,11 +1,9 @@
 #!/bin/bash
 
 {
-  [ ! -z "${ANDROID_HOME}" ] ||
-  exit 1
 
-  [ ! -z "${GRADLE_HOME}" ] ||
-  exit 1
+  export ANDROID_HOME=/opt/android
+  export GRADLE_HOME=/opt/gradle
 
   mkdir -p ${ANDROID_HOME} &&
   wget -qO sdk-tools-linux.zip "https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip" &&
@@ -31,17 +29,7 @@
     "build-tools;27.0.3" \
     "extras;android;m2repository" \
     "extras;google;google_play_services" \
-    "extras;google;m2repository" &> /dev/null ||
+    "extras;google;m2repository" >> ${HOME}/setup.log 2>&1 ||
   exit 1
-
-  cat >> ~/.bashrc << EOF
-
-export ANDROID_HOME=${ANDROID_HOME}
-export GRADLE_HOME=${GRADLE_HOME}
-
-export PATH=\${ANDROID_HOME}/tools:\${ANDROID_HOME}/platform-tools:\${PATH}
-export PATH=\${GRADLE_HOME}/bin:\${PATH}
-
-EOF
 
 }
