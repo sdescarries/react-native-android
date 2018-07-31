@@ -2,6 +2,13 @@
 
 {
 
+  cat >> ~/.bashrc << EOF
+
+# Hackaround gitlab not defining HOME at the right time
+export HOME=${HOME}
+
+EOF
+
   echo -e "Installing NVM"
 
   wget -qO- https://raw.githubusercontent.com/creationix/nvm/master/install.sh |
