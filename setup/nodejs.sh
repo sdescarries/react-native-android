@@ -2,9 +2,14 @@
 
 {
 
-  export NODE_VERSION=v10.7.0
-  export YARN_VERSION=1.9.2
-  export NVM_DIR=/opt/nvm
+  [ -z "${NODE_VERSION}" ] &&
+  exit 1
+
+  [ -z "${YARN_VERSION}" ] &&
+  exit 1
+
+  [ -z "${NVM_DIR}" ] &&
+  exit 1
 
   echo -e "Installing NVM"
 

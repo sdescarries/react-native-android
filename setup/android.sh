@@ -2,8 +2,11 @@
 
 {
 
-  export ANDROID_HOME=/opt/android
-  export GRADLE_HOME=/opt/gradle
+  [ -z "${ANDROID_HOME}" ] &&
+  exit 1
+
+  [ -z "${GRADLE_HOME}" ] &&
+  exit 1
 
   mkdir -p ${ANDROID_HOME} &&
   wget -qO sdk-tools-linux.zip "https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip" &&
