@@ -10,7 +10,7 @@
   yum -y install git unzip wget which
 
   # JDK
-  yum -y install java-1.8.0-openjdk
+  yum -y install java-1.8.0-openjdk java-1.8.0-openjdk-devel
   java -version
 
 }
