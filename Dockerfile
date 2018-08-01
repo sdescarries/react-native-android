@@ -50,7 +50,18 @@ RUN \
   rm -f sdk-tools-linux.zip && \
   mv -f ./tools ${ANDROID_HOME}/ && \
   sdkmanager --version
-  
+
+RUN \
+  echo -e "Installing Gradle" && \
+  rm -rf ${GRADLE_HOME} && \
+  mkdir -p $(dirname ${GRADLE_HOME}) && \
+  wget -qO gradle.zip "https://downloads.gradle.org/distributions/gradle-4.4-bin.zip" && \
+  unzip -q gradle.zip && \
+  rm -f gradle.zip && \
+  mv -f ./gradle-4.4 ${GRADLE_HOME} && \
+  ln -sf ${GRADLE_HOME}/bin/gradle /usr/bin/ && \
+  gradle --version
+
 RUN \
   echo -e "Installing Android SDK" && \
   echo -e 'y' | \
