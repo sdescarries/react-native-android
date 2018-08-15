@@ -11,7 +11,7 @@ ENV PATH=/opt/yarn/bin:/opt/nvm/versions/node/${NODE_VERSION}/bin:/opt/gradle/bi
 
 RUN \
   echo -e "Installing Base" && \
-  yum -y install git unzip wget which
+  yum -y install git unzip wget which bzip2 xz gzip
 
 RUN \
   echo -e "Installing NVM" && \
