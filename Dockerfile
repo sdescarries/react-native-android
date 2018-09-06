@@ -67,6 +67,7 @@ RUN \
   echo -e 'y' | \
   sdkmanager --install \
     "tools" \
+    "ndk-bundle" \
     "platform-tools" \
     "platforms;android-23" \
     "build-tools;27.0.3" \
