@@ -55,10 +55,10 @@ RUN \
   echo -e "Installing Gradle" && \
   rm -rf ${GRADLE_HOME} && \
   mkdir -p $(dirname ${GRADLE_HOME}) && \
-  wget -qO gradle.zip "https://downloads.gradle.org/distributions/gradle-4.9-bin.zip" && \
+  wget -qO gradle.zip "https://downloads.gradle.org/distributions/gradle-4.10-bin.zip" && \
   unzip -q gradle.zip && \
   rm -f gradle.zip && \
-  mv -f ./gradle-4.9 ${GRADLE_HOME} && \
+  mv -f ./gradle-4.10 ${GRADLE_HOME} && \
   ln -sf ${GRADLE_HOME}/bin/gradle /usr/bin/ && \
   gradle --version
 
