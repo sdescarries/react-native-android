@@ -48,6 +48,14 @@ RUN \
   google-chrome --version
 
 RUN \
+  echo -e "Installing Chrome Web Driver" && \
+  wget -qO chromedriver_linux64.zip "https://chromedriver.storage.googleapis.com/2.43/chromedriver_linux64.zip" && \
+  unzip -q chromedriver_linux64.zip && \
+  rm -f chromedriver_linux64.zip && \
+  mv -f chromedriver /usr/local/bin && \
+  chromedriver --version
+
+RUN \
   echo -e "Installing Android Tools" && \
   mkdir -p ${ANDROID_HOME} && \
   wget -qO sdk-tools-linux.zip "https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip" && \
