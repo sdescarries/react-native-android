@@ -4,14 +4,14 @@ ENV \
   ANDROID_HOME=/opt/android \
   GRADLE_HOME=/opt/gradle \
   NVM_DIR=/opt/nvm \
-  NODE_VERSION=v10.7.0 \
-  YARN_VERSION=1.9.2
+  NODE_VERSION=v10.13.0 \
+  YARN_VERSION=1.12.1
 
 ENV PATH=/opt/yarn/bin:/opt/nvm/versions/node/${NODE_VERSION}/bin:/opt/gradle/bin:/opt/android/platform-tools:/opt/android/tools/bin:/opt/android/tools:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
 
 RUN \
   echo -e "Installing Base" && \
-  yum -y install git unzip wget which bzip2 xz gzip
+  yum -y install git unzip wget which bzip2 xz gzip epel-release
 
 RUN \
   echo -e "Installing NVM" && \
@@ -43,6 +43,11 @@ RUN \
   java -version
 
 RUN \
+  echo -e "Installing Google Chrome" && \
+  yum -y install https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm && \
+  google-chrome --version
+
+RUN \
   echo -e "Installing Android Tools" && \
   mkdir -p ${ANDROID_HOME} && \
   wget -qO sdk-tools-linux.zip "https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip" && \
@@ -55,10 +60,10 @@ RUN \
   echo -e "Installing Gradle" && \
   rm -rf ${GRADLE_HOME} && \
   mkdir -p $(dirname ${GRADLE_HOME}) && \
-  wget -qO gradle.zip "https://downloads.gradle.org/distributions/gradle-4.10-bin.zip" && \
+  wget -qO gradle.zip "https://downloads.gradle.org/distributions/gradle-4.10.2-bin.zip" && \
   unzip -q gradle.zip && \
   rm -f gradle.zip && \
-  mv -f ./gradle-4.10 ${GRADLE_HOME} && \
+  mv -f ./gradle-4.10.2 ${GRADLE_HOME} && \
   ln -sf ${GRADLE_HOME}/bin/gradle /usr/bin/ && \
   gradle --version
 
@@ -67,11 +72,13 @@ RUN \
   echo -e 'y' | \
   sdkmanager --install \
     "tools" \
+    "emulator" \
     "ndk-bundle" \
     "platform-tools" \
-    "platforms;android-23" \
+    "platforms;android-27" \
     "build-tools;27.0.3" \
     "extras;android;m2repository" \
     "extras;google;google_play_services" \
+    "system-images;android-27;google_apis;x86" \
     "extras;google;m2repository" >> ${HOME}/setup.log 2>&1 && \
   adb --version
