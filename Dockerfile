@@ -2,32 +2,37 @@ FROM centos:7
 
 ENV \
   ANDROID_HOME=/opt/android \
-  GRADLE_HOME=/opt/gradle \
-  NVM_DIR=/opt/nvm \
-  NODE_VERSION=v10.13.0 \
-  YARN_VERSION=1.12.1
+  YARN_VERSION=1.12.3
 
-ENV PATH=/opt/yarn/bin:/opt/nvm/versions/node/${NODE_VERSION}/bin:/opt/gradle/bin:/opt/android/platform-tools:/opt/android/tools/bin:/opt/android/tools:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
+ENV PATH=/opt/yarn/bin:/opt/android/platform-tools:/opt/android/tools/bin:/opt/android/tools:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
 
 RUN \
   echo -e "Installing Base" && \
-  yum -y install git unzip wget which bzip2 xz gzip epel-release
+  yum makecache && \
+  yum -y install \
+    git \
+    unzip \
+    wget \
+    which \
+    bzip2 \
+    xz \
+    gzip \
+    epel-release \
+  && \
+  yum clean all
 
 RUN \
-  echo -e "Installing NVM" && \
-  rm -rf ${NVM_DIR} && \
-  mkdir -p ${NVM_DIR} && \
-  wget -qO- https://raw.githubusercontent.com/creationix/nvm/master/install.sh | \
-  /bin/bash >> ${HOME}/setup.log 2>&1
-
-RUN \
-  echo -e "Installing Node.JS" && \
-  source ${NVM_DIR}/nvm.sh && \
-  nvm --version && \
-  nvm install ${NODE_VERSION} >> ${HOME}/setup.log 2>&1 && \
-  nvm alias default node && \
+  echo -e "Installing Node.Js and Java" && \
+  yum makecache && \
+  yum -y install \
+    nodejs \
+    java-1.8.0-openjdk \
+    java-1.8.0-openjdk-devel \
+    && \
+  yum clean all && \
   node --version && \
-  npm --version
+  npm --version && \
+  java -version
 
 RUN \
   echo -e "Installing Yarn" && \
@@ -36,24 +41,6 @@ RUN \
   rm -rf /opt/yarn && \
   mv ${HOME}/.yarn /opt/yarn && \
   yarn --version
-
-RUN \
-  echo -e "Installing Java" && \
-  yum -y install java-1.8.0-openjdk java-1.8.0-openjdk-devel && \
-  java -version
-
-RUN \
-  echo -e "Installing Google Chrome" && \
-  yum -y install https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm && \
-  google-chrome --version
-
-RUN \
-  echo -e "Installing Chrome Web Driver" && \
-  wget -qO chromedriver_linux64.zip "https://chromedriver.storage.googleapis.com/2.43/chromedriver_linux64.zip" && \
-  unzip -q chromedriver_linux64.zip && \
-  rm -f chromedriver_linux64.zip && \
-  mv -f chromedriver /usr/local/bin && \
-  chromedriver --version
 
 RUN \
   echo -e "Installing Android Tools" && \
@@ -65,28 +52,10 @@ RUN \
   sdkmanager --version
 
 RUN \
-  echo -e "Installing Gradle" && \
-  rm -rf ${GRADLE_HOME} && \
-  mkdir -p $(dirname ${GRADLE_HOME}) && \
-  wget -qO gradle.zip "https://downloads.gradle.org/distributions/gradle-4.10.2-bin.zip" && \
-  unzip -q gradle.zip && \
-  rm -f gradle.zip && \
-  mv -f ./gradle-4.10.2 ${GRADLE_HOME} && \
-  ln -sf ${GRADLE_HOME}/bin/gradle /usr/bin/ && \
-  gradle --version
-
-RUN \
   echo -e "Installing Android SDK" && \
   echo -e 'y' | \
   sdkmanager --install \
     "tools" \
-    "emulator" \
-    "ndk-bundle" \
     "platform-tools" \
-    "platforms;android-27" \
-    "build-tools;27.0.3" \
-    "extras;android;m2repository" \
-    "extras;google;google_play_services" \
-    "system-images;android-27;google_apis;x86" \
-    "extras;google;m2repository" >> ${HOME}/setup.log 2>&1 && \
+     >> ${HOME}/setup.log 2>&1 && \
   adb --version
