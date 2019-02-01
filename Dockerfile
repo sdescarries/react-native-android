@@ -2,9 +2,11 @@ FROM centos:7
 
 ENV \
   ANDROID_HOME=/opt/android \
-  YARN_VERSION=1.12.3
+  NVM_DIR=/opt/nvm \
+  NODE_VERSION=v11.9.0 \
+  YARN_VERSION=1.13.0
 
-ENV PATH=/opt/yarn/bin:/opt/android/platform-tools:/opt/android/tools/bin:/opt/android/tools:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
+ENV PATH=/opt/yarn/bin:/opt/nvm/versions/node/${NODE_VERSION}/bin:/opt/android/platform-tools:/opt/android/tools/bin:/opt/android/tools:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
 
 RUN \
   echo -e "Installing Base" && \
@@ -22,17 +24,20 @@ RUN \
   yum clean all
 
 RUN \
-  echo -e "Installing Node.Js and Java" && \
-  yum makecache && \
-  yum -y install \
-    nodejs \
-    java-1.8.0-openjdk \
-    java-1.8.0-openjdk-devel \
-    && \
-  yum clean all && \
+  echo -e "Installing NVM" && \
+  rm -rf ${NVM_DIR} && \
+  mkdir -p ${NVM_DIR} && \
+  wget -qO- https://raw.githubusercontent.com/creationix/nvm/master/install.sh | \
+  /bin/bash >> ${HOME}/setup.log 2>&1
+
+RUN \
+  echo -e "Installing Node.JS" && \
+  source ${NVM_DIR}/nvm.sh && \
+  nvm --version && \
+  nvm install ${NODE_VERSION} >> ${HOME}/setup.log 2>&1 && \
+  nvm alias default node && \
   node --version && \
-  npm --version && \
-  java -version
+  npm --version
 
 RUN \
   echo -e "Installing Yarn" && \
@@ -41,6 +46,16 @@ RUN \
   rm -rf /opt/yarn && \
   mv ${HOME}/.yarn /opt/yarn && \
   yarn --version
+
+RUN \
+  echo -e "Installing Java" && \
+  yum makecache && \
+  yum -y install \
+    java-1.8.0-openjdk \
+    java-1.8.0-openjdk-devel \
+    && \
+  yum clean all && \
+  java -version
 
 RUN \
   echo -e "Installing Android Tools" && \
