@@ -20,6 +20,7 @@ RUN \
     xz \
     gzip \
     epel-release \
+    rpm-build \
   && \
   yum clean all
 
