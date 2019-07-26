@@ -3,8 +3,8 @@ FROM centos:7
 ENV \
   ANDROID_HOME=/opt/android \
   NVM_DIR=/opt/nvm \
-  NODE_VERSION=v11.9.0 \
-  YARN_VERSION=1.13.0
+  NODE_VERSION=v12.7.0 \
+  YARN_VERSION=1.17.3
 
 ENV PATH=/opt/yarn/bin:/opt/nvm/versions/node/${NODE_VERSION}/bin:/opt/android/platform-tools:/opt/android/tools/bin:/opt/android/tools:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
 
